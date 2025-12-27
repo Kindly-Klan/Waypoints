@@ -3,7 +3,8 @@
 	"package": "me.onethecrazy.onlywaypoints.mixin",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
-		"ServerAccessor"
+		"ServerAccessor",
+		"ServerPlayerDeathHook"
 	],
 	"injectors": {
 		"defaultRequire": 1

@@ -3,13 +3,10 @@
   "package": "me.onethecrazy.onlywaypoints.mixin.client",
   "compatibilityLevel": "JAVA_21",
   "client": [
-    "PauseScreenMixin",
-    "GameRendererAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "mixins": [
-    "ClientDeathHook"
   ]
 }
