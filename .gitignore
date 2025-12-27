@@ -8,6 +8,8 @@ classes/
 # eclipse
 
 *.launch
+api.md
+API_Example.java
 
 # idea
 

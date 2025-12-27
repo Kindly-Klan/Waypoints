@@ -3,12 +3,13 @@
 	"id": "onlywaypoints",
 	"version": "${version}",
 	"name": "OnlyWaypoints",
-	"description": "Adds clean and simple bloat-free Waypoints to minecraft",
+	"description": "Adds clean and simple bloat-free Waypoints to minecraft.",
 	"authors": [
 		"1TheCrazy"
 	],
 	"contact": {
-		"sources": "https://github.com/1TheCrazy/OnlyWaypoints"
+		"sources": "https://github.com/1TheCrazy/OnlyWaypoints",
+		"issues": "https://github.com/1TheCrazy/OnlyWaypoints/issues"
 	},
 	"license": "MIT",
 	"icon": "assets/onlywaypoints/icon.png",
@@ -34,7 +35,12 @@
 		"java": ">=21",
 		"fabric-api": "*"
 	},
-	"suggests": {
-		"another-mod": "*"
+	"custom": {
+		"modmenu": {
+			"links": {
+				"modmenu.discord": "https://discord.gg/fabric"
+			},
+			"badges": ["library"]
+		}
 	}
 }

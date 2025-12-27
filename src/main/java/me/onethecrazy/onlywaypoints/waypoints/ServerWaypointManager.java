@@ -3,6 +3,10 @@ package me.onethecrazy.onlywaypoints.waypoints;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import me.onethecrazy.OnlyWaypoints;
+import me.onethecrazy.onlywaypoints.api.event.WaypointCreateCallback;
+import me.onethecrazy.onlywaypoints.api.event.WaypointEvents;
+import me.onethecrazy.onlywaypoints.api.event.WaypointRemoveCallback;
+import me.onethecrazy.onlywaypoints.api.event.WaypointVisibilityChangeCallback;
 import me.onethecrazy.onlywaypoints.waypoints.objects.Coordinates;
 import me.onethecrazy.onlywaypoints.waypoints.objects.Waypoint;
 import me.onethecrazy.onlywaypoints.waypoints.objects.WaypointType;
@@ -90,11 +94,19 @@ public class ServerWaypointManager {
     public void addWaypoint(Waypoint waypoint) {
         waypoints.add(waypoint);
         saveWaypoints();
+
+        // Disparar evento de creación
+        var publicWaypoint = convertToPublicWaypoint(waypoint);
+        WaypointCreateCallback.EVENT.invoker().onWaypointCreated(publicWaypoint);
     }
 
     public void removeWaypoint(Waypoint waypoint) {
         waypoints.remove(waypoint);
         saveWaypoints();
+
+        // Disparar evento de eliminación
+        var publicWaypoint = convertToPublicWaypoint(waypoint);
+        WaypointRemoveCallback.EVENT.invoker().onWaypointRemoved(publicWaypoint);
     }
 
     public Waypoint getWaypointById(int id) {
@@ -155,9 +167,23 @@ public class ServerWaypointManager {
         });
 
         // Add new last death waypoint con color rojo para death
-        addWaypoint(new Waypoint(getNextId(), dimension, coords, lastDeathString, WaypointType.DEATH, 0xFF0000, new java.util.HashSet<>()));
+        var deathWaypoint = new Waypoint(getNextId(), dimension, coords, lastDeathString, WaypointType.DEATH, 0xFF0000, new java.util.HashSet<>());
+        addWaypoint(deathWaypoint);
 
         syncWaypointsToClients();
+    }
+
+    private static me.onethecrazy.onlywaypoints.api.Waypoint convertToPublicWaypoint(Waypoint internal) {
+        return new me.onethecrazy.onlywaypoints.api.Waypoint(
+                internal.id,
+                internal.dimension,
+                internal.coordinates.x,
+                internal.coordinates.y,
+                internal.coordinates.z,
+                internal.name,
+                internal.color,
+                internal.visibleToPlayers
+        );
     }
 
     public void setWaypointVisibility(int waypointId, String playerUuid, boolean visible) {
@@ -165,6 +191,10 @@ public class ServerWaypointManager {
         if (wp != null) {
             wp.setVisibilityFor(playerUuid, visible);
             saveWaypoints();
+
+            // Disparar evento de cambio de visibilidad
+            var publicWaypoint = convertToPublicWaypoint(wp);
+            WaypointVisibilityChangeCallback.EVENT.invoker().onWaypointVisibilityChanged(publicWaypoint, playerUuid, visible);
         }
     }
 }
